@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>愤怒大叔</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #000;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-arrow {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            margin-right: 20px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 10px;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+            border-color: #4CAF50;
+        }
+
+        .cell img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+
+        .invite-button {
+            margin-top: 40px;
+            background: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .room-info-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .qrcode-container {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .room-info {
+            margin: 10px 0;
+        }
+
+        .punishment-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .punishment-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            animation: iconRotate 0.5s ease;
+        }
+
+        .punishment-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            color: white;
+        }
+
+        .quit-button {
+            background: #666;
+        }
+
+        .restart-button {
+            background: #4CAF50;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                gap: 5px;
+                padding: 5px;
+            }
+
+            .cell {
+                padding: 3px;
+                border-radius: 8px;
+            }
+        }
+
+        .room-members {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 40px;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .room-members h2 {
+            margin: 0 0 20px 0;
+            font-size: 18px;
+        }
+
+        .member-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .member-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            align-items: center;
+            padding: 10px;
+            background: rgba(34, 34, 34, 0.6);
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .member-item:hover {
+            transform: translateX(5px);
+            border-color: rgba(76, 175, 80, 0.3);
+        }
+
+        .member-name {
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .member-coins {
+            text-align: center;
+            color: #FFD700;
+        }
+
+        .gift-button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            box-shadow: 0 2px 10px rgba(76, 175, 80, 0.2);
+            transition: all 0.3s ease;
+            border: none;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .gift-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .gift-info {
+            margin: 20px 0;
+        }
+
+        .gift-amount-input {
+            margin: 15px 0;
+        }
+
+        .gift-amount-input input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background: #222;
+            color: white;
+            margin-top: 5px;
+        }
+
+        .cancel-button {
+            background: #666;
+        }
+
+        .gift-button {
+            background: #4CAF50;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes iconRotate {
+            from {
+                transform: rotate(-180deg) scale(0);
+            }
+            to {
+                transform: rotate(0) scale(1);
+            }
+        }
+
+        /* 添加游戏页面特有的弹窗样式 */
+        .punishment-modal .modal-content {
+            text-align: center;
+            background: linear-gradient(145deg, rgba(26, 26, 26, 0.98), rgba(38, 38, 38, 0.98));
+        }
+
+        .punishment-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 25px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: iconRotate 0.5s ease, iconPulse 2s infinite;
+        }
+
+        .gift-modal .gift-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .gift-amount-input input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(34, 34, 34, 0.8);
+            color: white;
+            font-size: 16px;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .gift-amount-input input:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.2);
+            outline: none;
+        }
+
+        @keyframes iconPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="back-arrow">←</a>
+        <h1>愤怒大叔</h1>
+    </div>
+
+    <div class="grid" id="gameGrid"></div>
+
+    <button class="invite-button" onclick="showRoomInfo()">面对面邀请好友</button>
+
+    <div class="room-info-modal" id="roomInfoModal">
+        <div class="modal-content">
+            <h2>房间信息</h2>
+            <div class="room-info">
+                <p>房间号：<span id="roomNumber"></span></p>
+                <p>参与金币：<span id="coinAmount"></span></p>
+            </div>
+            <div class="qrcode-container" id="qrcode">
+                <!-- 二维码将在这里生成 -->
+            </div>
+        </div>
+    </div>
+
+    <div class="punishment-modal" id="punishmentModal">
+        <div class="modal-content">
+            <div class="punishment-icon">
+                <img id="punishmentIcon" src="" alt="惩罚图标">
+            </div>
+            <h2>恭喜点到炸弹啦</h2>
+            <p>你该喝酒了</p>
+            <p>获得 <span id="rewardCoins">0</span> 金币</p>
+            <div class="modal-buttons">
+                <button class="modal-button quit-button" onclick="quitGame()">不玩了</button>
+                <button class="modal-button restart-button" onclick="restartGame()">再来一局</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="room-members">
+        <h2>房间成员</h2>
+        <div class="member-list">
+            <!-- 成员列表将通过 JS 动态生成 -->
+        </div>
+    </div>
+
+    <div class="gift-modal" id="giftModal">
+        <div class="modal-content">
+            <h2>赠送金币</h2>
+            <div class="gift-info">
+                <p>赠送给：<span id="giftRecipient"></span></p>
+                <div class="gift-amount-input">
+                    <label>赠送金额：</label>
+                    <input type="number" id="giftAmountInput" min="1" placeholder="请输入赠送金额">
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-button cancel-button" onclick="closeGiftModal()">取消</button>
+                <button class="modal-button gift-button" onclick="sendGift()">确认赠送</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const gridSize = parseInt(urlParams.get('size')) || 4;
+        const selectedIcon = urlParams.get('icon');
+        const coins = parseInt(urlParams.get('coins')) || 0;
+        const roomNumber = urlParams.get('room');
+        let bombIndex;
+        const PLAYERS_COUNT = 2; // 假设房间人数为2，实际应该从后端获取
+
+        // 模拟房间成员数据
+        const roomMembers = [
+            { id: 1, name: "酒间二叔", coins: 0 },
+            { id: 2, name: "李太白", coins: 0 },
+            { id: 3, name: "苏子", coins: 0 }
+        ];
+
+        // 初始化游戏
+        function initializeGame() {
+            const grid = document.getElementById('gameGrid');
+            grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+            bombIndex = Math.floor(Math.random() * (gridSize * gridSize));
+
+            if (gridSize > 5) {
+                grid.style.maxWidth = '600px';
+            }
+
+            // 清空网格
+            grid.innerHTML = '';
+
+            // 解码图标URL
+            const decodedIcon = decodeURIComponent(selectedIcon);
+
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.innerHTML = `<img src="${decodedIcon}" alt="游戏图标">`;
+                cell.onclick = () => handleClick(i);
+                grid.appendChild(cell);
+            }
+        }
+
+        function handleClick(index) {
+            if (index === bombIndex) {
+                showPunishmentModal();
+            } else {
+                document.querySelectorAll('.cell')[index].classList.add('hidden');
+            }
+        }
+
+        function showRoomInfo() {
+            const modal = document.getElementById('roomInfoModal');
+            document.getElementById('roomNumber').textContent = roomNumber;
+            document.getElementById('coinAmount').textContent = coins;
+            
+            // TODO: 调用后端接口生成二维码
+            // 这里需要实现二维码生成逻辑
+            
+            modal.style.display = 'block';
+        }
+
+        function showPunishmentModal() {
+            const modal = document.getElementById('punishmentModal');
+            const punishmentIcon = document.getElementById('punishmentIcon');
+            const rewardCoins = document.getElementById('rewardCoins');
+            
+            // 设置惩罚图标
+            punishmentIcon.src = selectedIcon;
+            
+            // 计算奖励金币
+            const totalReward = coins * PLAYERS_COUNT;
+            rewardCoins.textContent = totalReward;
+            
+            modal.style.display = 'block';
+        }
+
+        function quitGame() {
+            window.location.href = 'index.html';
+        }
+
+        function restartGame() {
+            document.getElementById('punishmentModal').style.display = 'none';
+            initializeGame();
+        }
+
+        // 初始化房间成员列表
+        function initializeMemberList() {
+            const memberList = document.querySelector('.member-list');
+            memberList.innerHTML = '';
+
+            roomMembers.forEach(member => {
+                const memberItem = document.createElement('div');
+                memberItem.className = 'member-item';
+                memberItem.innerHTML = `
+                    <div class="member-name">${member.name}</div>
+                    <div class="member-coins">已赠送: ${member.coins}</div>
+                    <button class="gift-button" onclick="showGiftModal('${member.name}')">赠送</button>
+                `;
+                memberList.appendChild(memberItem);
+            });
+        }
+
+        // 显示赠送弹窗
+        function showGiftModal(recipientName) {
+            const modal = document.getElementById('giftModal');
+            document.getElementById('giftRecipient').textContent = recipientName;
+            document.getElementById('giftAmountInput').value = ''; // 清空输入框
+            modal.style.display = 'block';
+        }
+
+        function closeGiftModal() {
+            document.getElementById('giftModal').style.display = 'none';
+        }
+
+        function sendGift() {
+            const recipient = document.getElementById('giftRecipient').textContent;
+            const amount = parseInt(document.getElementById('giftAmountInput').value);
+
+            if (!amount || amount <= 0) {
+                alert('请输入有效的赠送金额！');
+                return;
+            }
+
+            // 更新成员列表中的金币数量
+            const member = roomMembers.find(m => m.name === recipient);
+            if (member) {
+                member.coins += amount;
+                initializeMemberList();
+            }
+
+            // TODO: 调用后端接口处理赠送逻辑
+
+            // 关闭弹窗
+            closeGiftModal();
+        }
+
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            const roomModal = document.getElementById('roomInfoModal');
+            const punishmentModal = document.getElementById('punishmentModal');
+            const giftModal = document.getElementById('giftModal');
+            
+            if (event.target === roomModal) {
+                roomModal.style.display = 'none';
+            }
+            if (event.target === giftModal) {
+                giftModal.style.display = 'none';
+            }
+            // 惩罚弹窗不允许点击外部关闭
+        }
+
+        initializeGame();
+        initializeMemberList();
+    </script>
+</body>
+</html>
