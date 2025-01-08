@@ -1,147 +1,53 @@
-body {
-    margin: 0;
-    padding: 0;
-    background: #000;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.product-card {
+    transition: all 0.3s ease;
 }
 
-.container {
-    position: relative;
-    width: 100%;
-    height: 100%;
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.heart {
+.badge {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100px;
-    height: 100px;
-    background: linear-gradient(45deg, #ff0000, #ff69b4);
-    box-shadow: 0 0 30px #ff69b4;
-    transform-style: preserve-3d;
-    animation: pulse 1.5s ease infinite, rotate3D 5s linear infinite;
+    top: 10px;
+    right: 10px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
 }
 
-.heart:before,
-.heart:after {
-    content: '';
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    background: #ff0000;
-    border-radius: 50%;
+.badge-hot {
+    background-color: #ff4d4f;
+    color: white;
 }
 
-.heart:before {
-    left: -50px;
+.badge-new {
+    background-color: #52c41a;
+    color: white;
 }
 
-.heart:after {
-    top: -50px;
+.price-original {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9em;
 }
 
-.text {
-    position: absolute;
-    top: 70%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    font-size: 24px;
-    text-align: center;
-    white-space: pre-wrap;
-    z-index: 1;
-    text-shadow: 0 0 10px #fff,
-                 0 0 20px #fff,
-                 0 0 30px #ff69b4;
-    animation: glow 2s ease-in-out infinite alternate;
+.rating-stars {
+    color: #fadb14;
 }
 
-@keyframes pulse {
-    0% {
-        transform: translate(-50%, -50%) scale(1);
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.2);
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-    }
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-in;
 }
 
-@keyframes rotate3D {
-    0% { transform: translate(-50%, -50%) rotate3d(1, 1, 1, 0deg); }
-    100% { transform: translate(-50%, -50%) rotate3d(1, 1, 1, 360deg); }
-}
-
-@keyframes glow {
-    from { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff69b4; }
-    to { text-shadow: 0 0 20px #fff, 0 0 30px #ff69b4, 0 0 40px #ff69b4; }
-}
-
-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-}
-
-.floating-hearts {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-}
-
-.music-control {
-    position: fixed;
-    right: 20px;
-    top: 20px;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #fff;
-    font-size: 20px;
-    animation: rotate 3s linear infinite;
-    z-index: 1000;
-}
-
-.music-control.paused {
-    animation-play-state: paused;
-}
-
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.firework {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    animation: explode 1s ease-out forwards;
-}
-
-@keyframes explode {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(30);
+@keyframes fadeIn {
+    from {
         opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 } 
