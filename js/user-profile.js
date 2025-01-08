@@ -116,7 +116,11 @@ class UserProfile {
 
         // 重新初始化推荐引擎
         if (window.recommendationEngine) {
-            window.recommendationEngine = new RecommendationEngine(products, newUser.behavior, productStats);
+            window.recommendationEngine = new RecommendationEngine(
+                products, 
+                newUser.behavior, 
+                productStats
+            );
         }
 
         // 重新初始化分析实例
@@ -137,17 +141,15 @@ class UserProfile {
             }
         });
         window.dispatchEvent(event);
-        
+
         // 重新设置事件监听器
         this.setupUserSwitch();
 
-        // 最后更新UI
+        // 更新UI显示
         if (window.uiInstance) {
+            window.uiInstance.cleanup(); // 清理旧的事件监听器
             window.uiInstance = new UI();
-            // 强制等待一小段时间确保其他更新完成
-            setTimeout(() => {
-                window.uiInstance.renderAll();
-            }, 100);
+            window.uiInstance.renderAll(); // 重新渲染所有UI组件
         }
     }
 

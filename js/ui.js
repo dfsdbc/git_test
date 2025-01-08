@@ -14,26 +14,16 @@ class UI {
     renderUserContent() {
         if (!window.recommendationEngine) return;
 
-        // 使用推荐引擎获取各类推荐
-        const personalRecs = window.recommendationEngine.getPersonalizedRecommendations();
-        const hotRecs = window.recommendationEngine.getHotRecommendations();
-        const similarRecs = window.recommendationEngine.getSimilarProducts(currentUser.behavior.views[0]);
-        
-        // 获取用户的浏览历史
-        const viewHistory = currentUser.behavior.views;
-        
-        // 渲染各个区域
-        this.renderPersonalizedSection(personalRecs);
-        this.renderViewHistory(viewHistory);
-        this.renderHotSection(hotRecs);
-        this.renderSimilarSection(similarRecs);
+        // 获取当前用户的推荐配置
+        const userRecs = userRecommendations[window.currentUser.id];
+        if (!userRecs) return;
 
-        // 获取最近浏览和特别推荐
-        const recentlyViewed = currentUser.behavior.views.slice(-4);
-        const recommended = window.recommendationEngine.getPreferenceBasedRecommendations();
-
-        this.renderRecentlyViewed(recentlyViewed);
-        this.renderRecommended(recommended);
+        // 使用用户特定的推荐数据
+        this.renderPersonalizedSection(userRecs.personalRecs);
+        this.renderViewHistory(userRecs.viewHistory);
+        this.renderHotSection(userRecs.hotRecs);
+        this.renderSimilarSection(userRecs.similarRecs);
+        this.renderRecommended(userRecs.recommended);
     }
 
     renderPersonalizedSection(recommendedIds) {
