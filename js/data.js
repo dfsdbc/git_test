@@ -279,23 +279,20 @@ const users = [
         memberLevel: '白金会员',
         registerDate: '2023-03-20',
         behavior: {
-            views: [3, 4, 5, 7, 9, 1, 2],
-            favorites: [4, 5, 7, 9],
+            views: [4, 5, 6],
+            favorites: [4, 5],
             cart: [
-                { productId: 3, quantity: 1 },
-                { productId: 7, quantity: 1 },
-                { productId: 9, quantity: 1 }
+                { productId: 5, quantity: 1 },
+                { productId: 6, quantity: 1 }
             ],
             purchases: [
                 { productId: 4, date: '2024-01-03' },
-                { productId: 5, date: '2023-12-25' },
-                { productId: 7, date: '2023-12-20' },
-                { productId: 1, date: '2023-12-15' }
+                { productId: 5, date: '2023-12-25' }
             ],
             preferences: {
-                categories: [1, 4],
-                priceRange: { min: 500, max: 8000 },
-                brands: ['Apple', 'Samsung', 'Sony']
+                categories: [4, 5],
+                priceRange: { min: 500, max: 20000 },
+                brands: ['Sony', 'YSL', 'Chanel']
             }
         }
     },
@@ -311,23 +308,20 @@ const users = [
         memberLevel: '钻石会员',
         registerDate: '2022-12-01',
         behavior: {
-            views: [2, 5, 8, 1, 4, 9, 3],
-            favorites: [2, 5, 8, 1],
+            views: [7, 8, 9],
+            favorites: [7, 8],
             cart: [
-                { productId: 1, quantity: 1 },
-                { productId: 4, quantity: 1 },
-                { productId: 8, quantity: 1 }
+                { productId: 8, quantity: 1 },
+                { productId: 9, quantity: 1 }
             ],
             purchases: [
-                { productId: 2, date: '2024-01-02' },
-                { productId: 5, date: '2023-12-28' },
-                { productId: 8, date: '2023-12-20' },
-                { productId: 3, date: '2023-12-5' }
+                { productId: 7, date: '2024-01-02' },
+                { productId: 8, date: '2023-12-28' }
             ],
             preferences: {
-                categories: [2, 1],
+                categories: [2, 7],
                 priceRange: { min: 2000, max: 20000 },
-                brands: ['Apple', 'Dell', 'Huawei']
+                brands: ['ThinkPad', 'BOSE', 'Apple']
             }
         }
     }

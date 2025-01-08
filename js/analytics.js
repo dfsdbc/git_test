@@ -243,22 +243,23 @@ class Analytics {
         
         // 获取所有浏览过的商品
         const viewedProducts = behavior.views
-            .map(id => this.products.find(p => p.id === id))
+            .map(id => products.find(p => p.id === id))
             .filter(Boolean);
 
         // 统计每个分类的浏览次数
         const categoryCount = {};
         viewedProducts.forEach(product => {
-            categoryCount[product.category] = (categoryCount[product.category] || 0) + 1;
+            const category = categories.find(c => c.id === product.category);
+            if (category) {
+                categoryCount[category.name] = (categoryCount[category.name] || 0) + 1;
+            }
         });
 
         // 找出浏览次数最多的分类
-        const mostViewedCategoryId = Object.entries(categoryCount)
-            .sort((a, b) => b[1] - a[1])[0]?.[0];
+        const sortedCategories = Object.entries(categoryCount)
+            .sort((a, b) => b[1] - a[1]);
 
-        // 返回分类名称
-        const categoryName = categories.find(c => c.id === parseInt(mostViewedCategoryId))?.name;
-        return categoryName || '暂无数据';
+        return sortedCategories[0]?.[0] || '暂无数据';
     }
 
     // 修改计算购物车总额的方法
