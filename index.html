@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能电商推荐系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航 -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-red-600">智能购物</h1>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="搜索商品" 
+                            class="w-64 px-4 py-2 border rounded-full focus:outline-none focus:border-red-500">
+                        <button class="absolute right-3 top-2.5 text-gray-400">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="#" class="text-gray-600 hover:text-red-600">
+                            <i class="fas fa-heart"></i>
+                            <span class="ml-1">收藏夹</span>
+                        </a>
+                        <a href="#" class="text-gray-600 hover:text-red-600">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="ml-1">购物车</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区 -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- 用户画像 -->
+        <div id="userProfile" class="mb-8">
+            <!-- 用户画像将通过 JS 动态插入 -->
+        </div>
+
+        <!-- 用户行为分析 -->
+        <div id="analytics" class="mb-8">
+            <!-- 行为分析将通过 JS 动态插入 -->
+        </div>
+
+        <!-- 分类导航 -->
+        <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+            <div id="categories" class="flex space-x-4">
+                <!-- 分类将通过 JS 动态插入 -->
+            </div>
+        </div>
+
+        <!-- 个性化推荐区域 -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">
+                <i class="fas fa-magic text-red-600"></i> 
+                猜你喜欢
+            </h2>
+            <div id="personalRecommendations" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- 个性化推荐商品将通过 JS 动态插入 -->
+            </div>
+        </div>
+
+        <!-- 最近浏览和相关推荐 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- 最近浏览 -->
+            <div class="md:col-span-3">
+                <h2 class="text-xl font-bold mb-4">
+                    <i class="fas fa-history text-blue-600"></i>
+                    最近浏览
+                </h2>
+                <div id="viewHistory" class="bg-white rounded-lg shadow-sm p-4">
+                    <!-- 浏览记录将通过 JS 动态插入 -->
+                </div>
+            </div>
+
+            <!-- 热门推荐 -->
+            <div>
+                <h2 class="text-xl font-bold mb-4">
+                    <i class="fas fa-fire text-orange-600"></i>
+                    热门推荐
+                </h2>
+                <div id="hotRecommendations" class="bg-white rounded-lg shadow-sm p-4">
+                    <!-- 热门推荐将通过 JS 动态插入 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 特别推荐 -->
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-4">
+                <i class="fas fa-star text-yellow-500"></i>
+                特别推荐
+            </h2>
+            <div id="recommended" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- 特别推荐将通过 JS 动态插入 -->
+            </div>
+        </div>
+
+        <!-- 相似商品推荐 -->
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-4">
+                <i class="fas fa-thumbs-up text-green-600"></i>
+                购买过的人还买过
+            </h2>
+            <div id="similarProducts" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- 相似商品将通过 JS 动态插入 -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 商品快速预览模态框 -->
+    <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+            <!-- 商品详情将通过 JS 动态插入 -->
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/recommendation-engine.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/user-profile.js"></script>
+    <script>
+        // 使用立即执行函数来初始化应用
+        (function initializeApp() {
+            // 创建全局实例
+            window.userProfileInstance = new UserProfile(users);
+            window.analyticsInstance = new Analytics(userBehavior, products);
+            window.recommendationEngine = new RecommendationEngine(products, userBehavior, productStats);
+            window.uiInstance = new UI();
+        })();
+    </script>
+</body>
+</html> 
+</html> 
